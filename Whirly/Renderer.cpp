@@ -1,6 +1,5 @@
 ﻿#include "Renderer.h"
 
-//using namespace std::chrono;
 using namespace Whirly::Core;
 
 // Renderer constructor.
@@ -106,9 +105,14 @@ void Renderer::Initialize(HWND hwnd)
 	// Create DirectWrite font format.
 	HR(m_dWriteFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_MEDIUM, 15.0, L"en-US", &m_dWriteTextFormat));
 
-	//timeDiff = 0;
-	//std::wstring wpath = Windows::ApplicationModel::Package::Current->InstalledLocation->Path->Data();
-	//wpath += L"\\Assets\\heRQP.png";
+	//std::string path;
+	//GetModuleFileNameW(NULL, path, MAX_PATH);
+
+	TCHAR path[MAX_PATH + 1] = L"";
+	DWORD len = GetCurrentDirectory(MAX_PATH, path);
+
+	std::wstring wpath = GetCurrentDir();
+	wpath += L"\\Assets\\heRQP.png";
 
 	//DX::Direct2DHelpers::Direct2DUtility::LoadBitmapFromFile(m_d2dContext.Get(), wpath.c_str(), 438, 316, &__testBmp);
 }
@@ -133,15 +137,13 @@ void Renderer::Update()
 	// Update scene objects.
 	stepTimer.Tick([&]()
 	{
-		// TODO: Replace this with your app's content update functions.
+		// Update logic goes here.
 	});
 }
 
 // This function renders a single frame of graphics.
 void Renderer::Render()
 {
-	//const auto start = high_resolution_clock::now();
-
 	// Start drawing.
 	m_d2dContext->BeginDraw();
 
@@ -154,14 +156,14 @@ void Renderer::Render()
 		&pBlackBrush
 		);
 
-
+	m_d2dContext->DrawTextW(GetCurrentDir().c_str(), GetCurrentDir().length(), m_dWriteTextFormat.Get(), D2D1::RectF(10, 100, 600, 100), pBlackBrush);
 	//m_d2dContext->DrawBitmap(__testBmp.Get(), D2D1::RectF(0, 0, 438, 316));
 
 
 	
 
 
-	m_d2dContext->SetTransform(D2D1::Matrix3x2F::Identity());
+	/*m_d2dContext->SetTransform(D2D1::Matrix3x2F::Identity());
 	m_d2dContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
 
 
@@ -215,16 +217,13 @@ void Renderer::Render()
 	m_d2dContext->FillRectangle(&rectangle1, pBlackBrush);
 
 	// Draw the outline of a rectangle.
-	m_d2dContext->DrawRectangle(&rectangle2, pBlackBrush);
+	m_d2dContext->DrawRectangle(&rectangle2, pBlackBrush);*/
 
 	// End drawing.
 	m_d2dContext->EndDraw();
 
 	// Swap buffers.
 	m_swapChain->Present1(1, 0, &dxgiPresentParameters);
-
-	//const auto end = high_resolution_clock::now();
-	//timeDiff = duration_cast<seconds>(end - start).count();
 }
 
 // This function handles screen resizing.

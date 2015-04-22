@@ -1,40 +1,12 @@
 ﻿#pragma once
 
-//#include <chrono>
-#include <string>
-#include <wrl.h>
-#include <atlbase.h>
-#include <atlwin.h>
-#include <d2d1_1.h>
-#include <d3d11_1.h>
-#include <dwrite.h>
-
+#include "Common.h"
+#include "Direct2DUtility.h"
 #include "StepTimer.h"
-
-#pragma comment(lib, "d2d1")
-#pragma comment(lib, "d3d11")
-#pragma comment(lib, "dwrite")
 
 using namespace Microsoft::WRL;
 using namespace D2D1;
 using namespace Whirly::Helpers;
-
-// Error handling macros.
-#define ASSERT ATLASSERT
-#define VERIFY ATLVERIFY
-#ifdef _DEBUG
-#define HR(expression) ASSERT(S_OK == (expression))
-#else
-struct ComException
-{
-	HRESULT const hr;
-	ComException(HRESULT const value) : hr(value) {}
-};
-inline void HR(HRESULT const hr)
-{
-	if (S_OK != hr) throw ComException(hr);
-}
-#endif
 
 // Renders Direct2D and 3D content on the screen.
 namespace Whirly
@@ -70,10 +42,11 @@ namespace Whirly
 			D2D1_BITMAP_PROPERTIES1 bitmapProperties;
 			DXGI_PRESENT_PARAMETERS dxgiPresentParameters;
 
-
-			//double timeDiff;
+			// Time counter.
 			StepTimer stepTimer;
 
+
+			
 			ComPtr<ID2D1Bitmap1> __testBmp;
 
 			// Creates device swap chain bitmap.
