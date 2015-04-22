@@ -1,5 +1,6 @@
 ﻿#include "Renderer.h"
 
+//using namespace std::chrono;
 using namespace Whirly::Core;
 
 // Renderer constructor.
@@ -99,7 +100,13 @@ void Renderer::Initialize(HWND hwnd)
 	// Creates device swapchain bitmap.
 	CreateDeviceSwapChainBitmap();
 
+	// Create DirectWrite factory.
+	HR(DWriteCreateFactory(DWRITE_FACTORY_TYPE_SHARED, __uuidof(IDWriteFactory), &m_dWriteFactory));
 
+	// Create DirectWrite font format.
+	HR(m_dWriteFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_MEDIUM, 15.0, L"en-US", &m_dWriteTextFormat));
+
+	//timeDiff = 0;
 	//std::wstring wpath = Windows::ApplicationModel::Package::Current->InstalledLocation->Path->Data();
 	//wpath += L"\\Assets\\heRQP.png";
 
@@ -120,17 +127,26 @@ void Renderer::CreateDeviceSwapChainBitmap()
 	m_d2dContext->SetTarget(m_d2dTargetBitmap.Get());
 }
 
+// Updates the application state once per frame.
+void Renderer::Update()
+{
+	// Update scene objects.
+	stepTimer.Tick([&]()
+	{
+		// TODO: Replace this with your app's content update functions.
+	});
+}
+
 // This function renders a single frame of graphics.
 void Renderer::Render()
 {
+	//const auto start = high_resolution_clock::now();
+
 	// Start drawing.
 	m_d2dContext->BeginDraw();
 
 	// Clear screen.
 	m_d2dContext->Clear(ColorF(0.0f, 0.0f, 0.0f));
-
-	//m_d2dContext->DrawBitmap(__testBmp.Get(), D2D1::RectF(0, 0, 438, 316));
-
 
 	ID2D1SolidColorBrush* pBlackBrush = NULL;
 	m_d2dContext->CreateSolidColorBrush(
@@ -139,8 +155,20 @@ void Renderer::Render()
 		);
 
 
+	//m_d2dContext->DrawBitmap(__testBmp.Get(), D2D1::RectF(0, 0, 438, 316));
+
+
+	
+
+
 	m_d2dContext->SetTransform(D2D1::Matrix3x2F::Identity());
 	m_d2dContext->Clear(D2D1::ColorF(D2D1::ColorF::White));
+
+
+
+	
+	m_d2dContext->DrawTextW(std::to_wstring(stepTimer.GetFramesPerSecond()).c_str(), 4, m_dWriteTextFormat.Get(), D2D1::RectF(10, 10, 50, 20), pBlackBrush);
+
 	D2D1_SIZE_F rtSize = m_d2dContext->GetSize();
 
 	// Draw a grid background.
@@ -194,6 +222,9 @@ void Renderer::Render()
 
 	// Swap buffers.
 	m_swapChain->Present1(1, 0, &dxgiPresentParameters);
+
+	//const auto end = high_resolution_clock::now();
+	//timeDiff = duration_cast<seconds>(end - start).count();
 }
 
 // This function handles screen resizing.
@@ -221,10 +252,14 @@ void Renderer::Resize(UINT width, UINT height)
 // Release resources.
 void Renderer::Release()
 {
+	m_dWriteFactory.Reset();
+	m_dWriteTextFormat.Reset();
+
 	m_d2dTargetBitmap.Reset();
 	m_d2dFactory.Reset();
 	m_d2dContext.Reset();
 	m_d2dDevice.Reset();
+
 	m_d3dRenderTargetView.Reset();
 	m_swapChain.Reset();
 	m_d3dContext.Reset();

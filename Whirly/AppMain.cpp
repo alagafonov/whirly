@@ -35,6 +35,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 				}
 				else
 				{
+					renderer->Update();
+
 					// Render graphics frame.
 					renderer->Render();
 				}
