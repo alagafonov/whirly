@@ -110,10 +110,10 @@ void Renderer::Initialize(HWND hwnd)
 
 	Direct2DHelper::LoadBitmapFromFile(m_d2dContext.Get(), L"Assets\\Images\\14960114.jpg", 300, 300, &__testBmp);
 
-	//std::wstring wpath = GetCurrentDir();
-	//wpath += L"\\Assets\\heRQP.png";
-
-	//DX::Direct2DHelpers::Direct2DUtility::LoadBitmapFromFile(m_d2dContext.Get(), wpath.c_str(), 438, 316, &__testBmp);
+	m_d2dContext->CreateSolidColorBrush(
+		D2D1::ColorF(D2D1::ColorF::Brown),
+		&pBlackBrush
+		);
 }
 
 // Creates device swapchain bitmap.
@@ -149,16 +149,16 @@ void Renderer::Render()
 	// Clear screen.
 	m_d2dContext->Clear(ColorF(0.0f, 0.0f, 0.0f));
 
-	ID2D1SolidColorBrush* pBlackBrush = NULL;
-	m_d2dContext->CreateSolidColorBrush(
-		D2D1::ColorF(D2D1::ColorF::Brown),
-		&pBlackBrush
-		);
+	
+	
 
 	
+
+
 	
 	//m_d2dContext->DrawTextW(GetCurrentDir().c_str(), GetCurrentDir().length(), m_dWriteTextFormat.Get(), D2D1::RectF(10, 100, 600, 100), pBlackBrush);
-	//m_d2dContext->DrawBitmap(__testBmp.Get(), D2D1::RectF(0, 0, 300, 300));
+	m_d2dContext->DrawBitmap(__testBmp.Get(), D2D1::RectF(0, 0, 300, 300));
+	m_d2dContext->DrawTextW(L"ELENA", 5, m_dWriteTextFormat.Get(), D2D1::RectF(10, 100, 600, 100), pBlackBrush);
 
 
 	
@@ -252,6 +252,7 @@ void Renderer::Resize(UINT width, UINT height)
 // Release resources.
 void Renderer::Release()
 {
+	Direct2DHelper::ReleaseWICFactory();
 	m_dWriteFactory.Reset();
 	m_dWriteTextFormat.Reset();
 
@@ -259,7 +260,6 @@ void Renderer::Release()
 	m_d2dFactory.Reset();
 	m_d2dContext.Reset();
 	m_d2dDevice.Reset();
-	Direct2DHelper::ReleaseWICFactory();
 
 	m_d3dRenderTargetView.Reset();
 	m_swapChain.Reset();

@@ -44,9 +44,7 @@ namespace Whirly
 
 			// Time counter.
 			StepTimer stepTimer;
-
-
-			
+			ID2D1SolidColorBrush* pBlackBrush = NULL;
 			ComPtr<ID2D1Bitmap1> __testBmp;
 
 			// Creates device swap chain bitmap.

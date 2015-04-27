@@ -21,7 +21,7 @@ HRESULT Direct2DHelper::LoadBitmapFromFile(ID2D1DeviceContext *renderTarget, con
 	ComPtr<IWICStream> stream;
 	ComPtr<IWICFormatConverter> converter;
 	ComPtr<IWICBitmapScaler> scaler;
-	ComPtr<IWICImagingFactory> wicFactory;
+	IWICImagingFactory *wicFactory;
 
 	// Get WIC factory.
 	HR(GetWICFactory(&wicFactory));
@@ -88,13 +88,4 @@ HRESULT Direct2DHelper::GetWICFactory(IWICImagingFactory** factory)
 	*factory = m_pWICFactory.Get();
 
 	return S_OK;
-}
-
-// Release WIC Imaging factory.
-void Direct2DHelper::ReleaseWICFactory()
-{
-	if (m_pWICFactory != nullptr)
-	{
-		m_pWICFactory.Reset();
-	}
 }

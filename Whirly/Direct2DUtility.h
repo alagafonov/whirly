@@ -19,8 +19,13 @@ namespace Whirly
 			//Get WIC factory.
 			static HRESULT GetWICFactory(__out IWICImagingFactory** factory);
 
-			//Release WIC factory.
-			static void ReleaseWICFactory();
+			inline static void ReleaseWICFactory()
+			{
+				if (m_pWICFactory != nullptr)
+				{
+					m_pWICFactory.Reset();
+				}
+			}
 
 		private:
 
