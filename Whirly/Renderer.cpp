@@ -105,14 +105,13 @@ void Renderer::Initialize(HWND hwnd)
 	// Create DirectWrite font format.
 	HR(m_dWriteFactory->CreateTextFormat(L"Arial", nullptr, DWRITE_FONT_WEIGHT_NORMAL, DWRITE_FONT_STYLE_NORMAL, DWRITE_FONT_STRETCH_MEDIUM, 15.0, L"en-US", &m_dWriteTextFormat));
 
-	//std::string path;
-	//GetModuleFileNameW(NULL, path, MAX_PATH);
+	//TCHAR path[MAX_PATH + 1] = L"";
+	//DWORD len = GetCurrentDirectory(MAX_PATH, path);
 
-	TCHAR path[MAX_PATH + 1] = L"";
-	DWORD len = GetCurrentDirectory(MAX_PATH, path);
+	Direct2DHelper::LoadBitmapFromFile(m_d2dContext.Get(), L"Assets\\Images\\14960114.jpg", 300, 300, &__testBmp);
 
-	std::wstring wpath = GetCurrentDir();
-	wpath += L"\\Assets\\heRQP.png";
+	//std::wstring wpath = GetCurrentDir();
+	//wpath += L"\\Assets\\heRQP.png";
 
 	//DX::Direct2DHelpers::Direct2DUtility::LoadBitmapFromFile(m_d2dContext.Get(), wpath.c_str(), 438, 316, &__testBmp);
 }
@@ -156,8 +155,10 @@ void Renderer::Render()
 		&pBlackBrush
 		);
 
-	m_d2dContext->DrawTextW(GetCurrentDir().c_str(), GetCurrentDir().length(), m_dWriteTextFormat.Get(), D2D1::RectF(10, 100, 600, 100), pBlackBrush);
-	//m_d2dContext->DrawBitmap(__testBmp.Get(), D2D1::RectF(0, 0, 438, 316));
+	
+	
+	//m_d2dContext->DrawTextW(GetCurrentDir().c_str(), GetCurrentDir().length(), m_dWriteTextFormat.Get(), D2D1::RectF(10, 100, 600, 100), pBlackBrush);
+	//m_d2dContext->DrawBitmap(__testBmp.Get(), D2D1::RectF(0, 0, 300, 300));
 
 
 	
@@ -258,6 +259,7 @@ void Renderer::Release()
 	m_d2dFactory.Reset();
 	m_d2dContext.Reset();
 	m_d2dDevice.Reset();
+	Direct2DHelper::ReleaseWICFactory();
 
 	m_d3dRenderTargetView.Reset();
 	m_swapChain.Reset();

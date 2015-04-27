@@ -19,6 +19,9 @@ namespace Whirly
 			//Get WIC factory.
 			static HRESULT GetWICFactory(__out IWICImagingFactory** factory);
 
+			//Release WIC factory.
+			static void ReleaseWICFactory();
+
 		private:
 
 			// Direct2DHelper constructor.

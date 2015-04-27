@@ -80,7 +80,7 @@ HRESULT Direct2DHelper::LoadBitmapFromFile(ID2D1DeviceContext *renderTarget, con
 HRESULT Direct2DHelper::GetWICFactory(IWICImagingFactory** factory)
 {	
 	// If WIC factory has not yet been initialized then create it.
-	if (nullptr == m_pWICFactory)
+	if (m_pWICFactory == nullptr)
 	{
 		HR(CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pWICFactory)));
 	}
@@ -88,4 +88,13 @@ HRESULT Direct2DHelper::GetWICFactory(IWICImagingFactory** factory)
 	*factory = m_pWICFactory.Get();
 
 	return S_OK;
+}
+
+// Release WIC Imaging factory.
+void Direct2DHelper::ReleaseWICFactory()
+{
+	if (m_pWICFactory != nullptr)
+	{
+		m_pWICFactory.Reset();
+	}
 }
