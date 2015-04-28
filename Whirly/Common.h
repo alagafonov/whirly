@@ -11,6 +11,8 @@
 
 #pragma comment(lib, "d2d1")
 #pragma comment(lib, "d3d11")
+#pragma comment(lib, "d2d1")
+#pragma comment(lib, "dxguid")
 #pragma comment(lib, "dwrite")
 
 // Error handling macros.

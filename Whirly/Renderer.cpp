@@ -108,7 +108,8 @@ void Renderer::Initialize(HWND hwnd)
 	//TCHAR path[MAX_PATH + 1] = L"";
 	//DWORD len = GetCurrentDirectory(MAX_PATH, path);
 
-	Direct2DHelper::LoadBitmapFromFile(m_d2dContext.Get(), L"Assets\\Images\\14960114.jpg", 300, 300, &__testBmp);
+	//Direct2DHelper::LoadBitmapFromFile(m_d2dContext.Get(), L"Assets\\Images\\14960114.jpg", 300, 300, &__testBmp);
+	Direct2DHelper::LoadBitmapFromFile(m_d2dContext.Get(), L"Assets\\Images\\circle.png", 16, 16, &__testBmp);
 
 	m_d2dContext->CreateSolidColorBrush(
 		D2D1::ColorF(D2D1::ColorF::Brown),
@@ -154,11 +155,29 @@ void Renderer::Render()
 
 	
 
-
 	
 	//m_d2dContext->DrawTextW(GetCurrentDir().c_str(), GetCurrentDir().length(), m_dWriteTextFormat.Get(), D2D1::RectF(10, 100, 600, 100), pBlackBrush);
-	m_d2dContext->DrawBitmap(__testBmp.Get(), D2D1::RectF(0, 0, 300, 300));
-	m_d2dContext->DrawTextW(L"ELENA", 5, m_dWriteTextFormat.Get(), D2D1::RectF(10, 100, 600, 100), pBlackBrush);
+	//m_d2dContext->DrawBitmap(__testBmp.Get(), D2D1::RectF(10, 10, 26, 26));
+	//m_d2dContext->DrawTextW(L"ELENA", 5, m_dWriteTextFormat.Get(), D2D1::RectF(10, 100, 600, 100), pBlackBrush);
+
+
+	ComPtr<ID2D1Effect> colorMatrixEffect;
+	HR(m_d2dContext->CreateEffect(CLSID_D2D1ColorMatrix, &colorMatrixEffect));
+
+	colorMatrixEffect->SetInput(0, __testBmp.Get());
+
+	D2D1_MATRIX_5X4_F matrix = D2D1::Matrix5x4F(0.5, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0);
+	HR(colorMatrixEffect->SetValue(D2D1_COLORMATRIX_PROP_COLOR_MATRIX, matrix));
+
+	/*255 0 0 0 1 x 1 0 0 1
+				  0 0 0 0
+				  0 0 0 0
+				  0 0 0 0
+				  0 0 0 0*/
+
+	m_d2dContext->DrawImage(colorMatrixEffect.Get());
+
+
 
 
 	
